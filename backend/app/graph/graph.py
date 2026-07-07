@@ -59,7 +59,7 @@ class Graph:
         from app.graph.task import Task
 
         return [
-            Task.load(self, **row["n"])
+            Task.from_record(self, row["n"])
             for row in self.match("n", "Task").return_("n")
         ]
 

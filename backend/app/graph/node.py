@@ -42,12 +42,19 @@ class Node:
         return node
 
     @classmethod
+    def from_record(cls, graph: Graph, record: dict[str, Any]) -> Node:
+        """Load a node from database properties, dropping the `graph` scope key."""
+        attrs = {k: v for k, v in record.items() if k != "graph"}
+
+        return cls.load(graph, **attrs)
+
+    @classmethod
     def find(cls, graph: Graph, id: str) -> Node | None:
         row = graph.match("n", cls.label(), id=id).return_("n").first()
         if row is None:
             return None
 
-        return cls.load(graph, **row["n"])
+        return cls.from_record(graph, row["n"])
 
     def validate(self) -> list[str]:
         return []

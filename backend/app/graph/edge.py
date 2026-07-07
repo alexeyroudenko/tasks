@@ -57,9 +57,9 @@ class Edge:
         return [
             cls.load(
                 graph,
-                from_node=node_class.load(graph, **row["n"]),
+                from_node=node_class.from_record(graph, row["n"]),
                 type=row["t"],
-                to_node=node_class.load(graph, **row["m"]),
+                to_node=node_class.from_record(graph, row["m"]),
             )
             for row in rows
         ]
