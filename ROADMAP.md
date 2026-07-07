@@ -6,7 +6,7 @@ Each subtask is implemented and committed separately.
 
 - [x] 0. Repository bootstrap: git init, GitHub repo, README, LICENSE
 - [x] 1. Cursor skills (`.cursor/skills/`) and this roadmap
-- [ ] 2. Scaffolding: docker-compose (postgres, neo4j), `backend/` (FastAPI), `frontend/` (Vite + React + TS + Tailwind)
+- [x] 2. Scaffolding: docker-compose (postgres, neo4j), `backend/` (FastAPI), `frontend/` (Vite + React + TS + Tailwind)
 - [ ] 3. Relational layer: SQLAlchemy models `User`, `Project` (UUID PK), Alembic migrations
 - [ ] 4. Graph layer: Cypher DSL query builder, `Node`, `Edge`, `Task` models on Neo4j
 - [ ] 5. REST API: projects CRUD, tasks CRUD, relationships add/remove, D3 graph JSON endpoint, calendar endpoint
