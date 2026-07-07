@@ -131,7 +131,7 @@ def run() -> None:
         projects = list(db.scalars(select(Project)))
         if not projects:
             projects = [
-                Project(name="Code Red", description="Port of the original demo project", user_id=users[0].id),
+                Project(name="Sample Project", description="Demo project with sample tasks", user_id=users[0].id),
             ]
             db.add_all(projects)
             db.commit()
