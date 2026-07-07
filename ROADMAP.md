@@ -12,4 +12,4 @@ Each subtask is implemented and committed separately.
 - [x] 5. REST API: projects CRUD, tasks CRUD, relationships add/remove, D3 graph JSON endpoint, calendar endpoint
 - [x] 6. Frontend: Tailwind layout, task list/modal with form, D3 force graph, calendar view
 - [x] 7. Seeds and tests: sample data seeder, pytest for the DSL and graph models, vitest for frontend
-- [ ] 8. Final: GitHub Actions CI, complete README
+- [x] 8. Final: GitHub Actions CI, complete README
