@@ -27,26 +27,26 @@ export default function ProjectSidebar({
   };
 
   return (
-    <aside className="flex w-64 flex-col border-r border-gray-200 bg-white">
-      <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
+    <aside className="flex w-64 flex-col border-r border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
         <h1 className="text-lg font-bold text-red-600">Tasks</h1>
         <button
           onClick={() => setCreating(!creating)}
-          className="rounded bg-gray-100 px-2 py-1 text-sm text-gray-600 hover:bg-gray-200"
+          className="rounded bg-gray-100 px-2 py-1 text-sm text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
         >
           + New
         </button>
       </div>
 
       {creating && (
-        <div className="border-b border-gray-200 p-3">
+        <div className="border-b border-gray-200 p-3 dark:border-gray-700">
           <input
             autoFocus
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && void create()}
             placeholder="Project name"
-            className="mb-2 w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+            className="mb-2 w-full rounded border border-gray-300 px-2 py-1.5 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400"
           />
           <button
             onClick={() => void create()}
@@ -64,8 +64,8 @@ export default function ProjectSidebar({
             onClick={() => onSelect(project.id)}
             className={`mb-1 flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm ${
               project.id === selectedId
-                ? "bg-blue-50 font-medium text-blue-700"
-                : "text-gray-700 hover:bg-gray-50"
+                ? "bg-blue-50 font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
             }`}
           >
             <TypeIcon icon={project.icon} className="h-4 w-4 shrink-0" />
@@ -73,7 +73,9 @@ export default function ProjectSidebar({
           </button>
         ))}
         {projects.length === 0 && (
-          <p className="px-3 py-2 text-sm text-gray-400">No projects yet</p>
+          <p className="px-3 py-2 text-sm text-gray-400 dark:text-gray-500">
+            No projects yet
+          </p>
         )}
       </nav>
     </aside>

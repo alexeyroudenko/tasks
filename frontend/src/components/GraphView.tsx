@@ -13,11 +13,27 @@ interface SimEdge extends d3.SimulationLinkDatum<SimNode> {
   label: string;
 }
 
+const LIGHT = {
+  nodeFill: "#ffffff",
+  nodeText: "#111827",
+  edge: "#9ca3af",
+  edgeLabel: "#6b7280",
+};
+
+const DARK = {
+  nodeFill: "#1f2937",
+  nodeText: "#f9fafb",
+  edge: "#6b7280",
+  edgeLabel: "#9ca3af",
+};
+
 export default function GraphView({
   data,
+  dark = false,
   onSelectTask,
 }: {
   data: GraphData;
+  dark?: boolean;
   onSelectTask: (taskId: string) => void;
 }) {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -26,6 +42,7 @@ export default function GraphView({
     const svgElement = svgRef.current;
     if (!svgElement) return;
 
+    const palette = dark ? DARK : LIGHT;
     const { width, height } = svgElement.getBoundingClientRect();
 
     const svg = d3.select(svgElement);
@@ -43,7 +60,7 @@ export default function GraphView({
       .attr("orient", "auto")
       .append("path")
       .attr("d", "M0,-5L10,0L0,5")
-      .attr("fill", "#9ca3af");
+      .attr("fill", palette.edge);
 
     const container = svg.append("g");
 
@@ -77,7 +94,7 @@ export default function GraphView({
       .enter()
       .append("line")
       .attr("class", "link")
-      .attr("stroke", "#9ca3af")
+      .attr("stroke", palette.edge)
       .attr("stroke-width", 1.5)
       .attr("marker-end", "url(#arrow)");
 
@@ -88,7 +105,7 @@ export default function GraphView({
       .append("text")
       .attr("class", "link-label")
       .attr("font-size", 11)
-      .attr("fill", "#6b7280")
+      .attr("fill", palette.edgeLabel)
       .attr("text-anchor", "middle")
       .text((d) => d.label);
 
@@ -124,7 +141,7 @@ export default function GraphView({
       .attr("width", NODE_WIDTH)
       .attr("height", NODE_HEIGHT)
       .attr("rx", NODE_RADIUS)
-      .attr("fill", "#ffffff")
+      .attr("fill", palette.nodeFill)
       .attr("stroke", (d) => colorToHex(d.status))
       .attr("stroke-width", 2);
 
@@ -134,7 +151,7 @@ export default function GraphView({
       .attr("y", 22)
       .attr("font-size", 12)
       .attr("font-weight", 600)
-      .attr("fill", "#111827")
+      .attr("fill", palette.nodeText)
       .text((d) =>
         d.label.length > 22 ? `${d.label.slice(0, 22)}…` : d.label,
       );
@@ -177,7 +194,7 @@ export default function GraphView({
     return () => {
       simulation.stop();
     };
-  }, [data, onSelectTask]);
+  }, [data, dark, onSelectTask]);
 
-  return <svg ref={svgRef} className="h-full w-full bg-gray-50" />;
+  return <svg ref={svgRef} className="h-full w-full bg-gray-50 dark:bg-gray-900" />;
 }

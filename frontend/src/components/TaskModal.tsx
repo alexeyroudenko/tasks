@@ -17,6 +17,13 @@ const RELATIONSHIP_LABELS: Record<RelationshipName, string> = {
   related_to: "Related to",
 };
 
+const inputClass =
+  "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100";
+const selectClass =
+  "w-full rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100";
+const labelClass =
+  "mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300";
+
 export default function TaskModal({
   projectId,
   taskId,
@@ -116,15 +123,15 @@ export default function TaskModal({
   const otherTasks = allTasks.filter((t) => t.id !== taskId);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="max-h-full w-full max-w-lg overflow-y-auto rounded-lg bg-white p-6 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 dark:bg-black/60">
+      <div className="max-h-full w-full max-w-lg overflow-y-auto rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
             {taskId ? "Edit task" : "New task"}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
             aria-label="Close"
           >
             ✕
@@ -132,40 +139,38 @@ export default function TaskModal({
         </div>
 
         {notice && (
-          <div className="mb-3 rounded bg-green-50 px-3 py-2 text-sm text-green-700">
+          <div className="mb-3 rounded bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
             {notice}
           </div>
         )}
 
         <div className="space-y-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Title</label>
+            <label className={labelClass}>Title</label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              className={inputClass}
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Description
-            </label>
+            <label className={labelClass}>Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              className={inputClass}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Status</label>
+              <label className={labelClass}>Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                className={selectClass}
               >
                 {TASK_STATUSES.map((s) => (
                   <option key={s} value={s}>
@@ -175,11 +180,11 @@ export default function TaskModal({
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Type</label>
+              <label className={labelClass}>Type</label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                className={selectClass}
               >
                 {TASK_TYPES.map((t) => (
                   <option key={t} value={t}>
@@ -192,24 +197,20 @@ export default function TaskModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Deadline
-              </label>
+              <label className={labelClass}>Deadline</label>
               <input
                 type="date"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
-                className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                className={selectClass}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Assignee
-              </label>
+              <label className={labelClass}>Assignee</label>
               <select
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
-                className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                className={selectClass}
               >
                 <option value="">—</option>
                 {users.map((u) => (
@@ -223,19 +224,25 @@ export default function TaskModal({
         </div>
 
         {taskId && task?.relationships && (
-          <div className="mt-5 border-t border-gray-200 pt-4">
-            <h3 className="mb-2 text-sm font-semibold text-gray-700">Relationships</h3>
+          <div className="mt-5 border-t border-gray-200 pt-4 dark:border-gray-700">
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+              Relationships
+            </h3>
 
             <ul className="space-y-1">
               {RELATIONSHIP_NAMES.flatMap((name) =>
                 (task.relationships?.[name] ?? []).map((ref) => (
                   <li
                     key={`${name}-${ref.id}`}
-                    className="flex items-center justify-between rounded bg-gray-50 px-3 py-1.5 text-sm"
+                    className="flex items-center justify-between rounded bg-gray-50 px-3 py-1.5 text-sm dark:bg-gray-700"
                   >
                     <span>
-                      <span className="text-gray-500">{RELATIONSHIP_LABELS[name]}</span>{" "}
-                      <span className="font-medium text-gray-800">{ref.title}</span>
+                      <span className="text-gray-500 dark:text-gray-400">
+                        {RELATIONSHIP_LABELS[name]}
+                      </span>{" "}
+                      <span className="font-medium text-gray-800 dark:text-gray-100">
+                        {ref.title}
+                      </span>
                     </span>
                     <button
                       onClick={() => void removeRelationship(name, ref)}
@@ -253,7 +260,7 @@ export default function TaskModal({
               <select
                 value={newRelType}
                 onChange={(e) => setNewRelType(e.target.value as RelationshipName)}
-                className="rounded border border-gray-300 px-2 py-1.5 text-sm"
+                className="rounded border border-gray-300 px-2 py-1.5 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
               >
                 {RELATIONSHIP_NAMES.map((name) => (
                   <option key={name} value={name}>
@@ -264,7 +271,7 @@ export default function TaskModal({
               <select
                 value={newRelTarget}
                 onChange={(e) => setNewRelTarget(e.target.value)}
-                className="flex-1 rounded border border-gray-300 px-2 py-1.5 text-sm"
+                className="flex-1 rounded border border-gray-300 px-2 py-1.5 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
               >
                 <option value="">Select task…</option>
                 {otherTasks.map((t) => (
@@ -288,7 +295,7 @@ export default function TaskModal({
           {taskId ? (
             <button
               onClick={() => void remove()}
-              className="rounded px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+              className="rounded px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
             >
               Delete
             </button>
@@ -298,7 +305,7 @@ export default function TaskModal({
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="rounded px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
+              className="rounded px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               Cancel
             </button>

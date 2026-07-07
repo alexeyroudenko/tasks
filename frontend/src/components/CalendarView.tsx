@@ -52,6 +52,7 @@ export default function CalendarView({
   const daysInMonth = new Date(year, month, 0).getDate();
   // Weeks start on Monday
   const firstWeekday = (new Date(year, month - 1, 1).getDay() + 6) % 7;
+  const trailing = (7 - ((firstWeekday + daysInMonth) % 7)) % 7;
 
   const tasksByDay = new Map<number, Task[]>();
   for (const task of data?.tasks ?? []) {
@@ -63,33 +64,42 @@ export default function CalendarView({
   return (
     <div className="flex h-full flex-col p-4">
       <div className="mb-4 flex items-center justify-between">
-        <button onClick={previous} className="rounded px-3 py-1 text-gray-600 hover:bg-gray-100">
+        <button
+          onClick={previous}
+          className="rounded px-3 py-1 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+        >
           ← Previous
         </button>
-        <h2 className="text-lg font-semibold text-gray-800">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
           {MONTHS[month - 1]} {year}
         </h2>
-        <button onClick={next} className="rounded px-3 py-1 text-gray-600 hover:bg-gray-100">
+        <button
+          onClick={next}
+          className="rounded px-3 py-1 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+        >
           Next →
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-px overflow-hidden rounded-lg border border-gray-200 bg-gray-200 text-sm">
+      <div className="grid grid-cols-7 gap-px overflow-hidden rounded-lg border border-gray-200 bg-gray-200 text-sm dark:border-gray-700 dark:bg-gray-700">
         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
-          <div key={day} className="bg-gray-50 px-2 py-1 text-center font-medium text-gray-500">
+          <div
+            key={day}
+            className="bg-gray-50 px-2 py-1 text-center font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+          >
             {day}
           </div>
         ))}
 
         {Array.from({ length: firstWeekday }).map((_, i) => (
-          <div key={`empty-${i}`} className="min-h-24 bg-white" />
+          <div key={`empty-${i}`} className="min-h-24 bg-white dark:bg-gray-800" />
         ))}
 
         {Array.from({ length: daysInMonth }).map((_, i) => {
           const day = i + 1;
           return (
-            <div key={day} className="min-h-24 bg-white p-1">
-              <div className="mb-1 text-xs text-gray-400">{day}</div>
+            <div key={day} className="min-h-24 bg-white p-1 dark:bg-gray-800">
+              <div className="mb-1 text-xs text-gray-400 dark:text-gray-500">{day}</div>
               {(tasksByDay.get(day) ?? []).map((task) => (
                 <button
                   key={task.id}
@@ -104,6 +114,10 @@ export default function CalendarView({
             </div>
           );
         })}
+
+        {Array.from({ length: trailing }).map((_, i) => (
+          <div key={`trailing-${i}`} className="min-h-24 bg-white dark:bg-gray-800" />
+        ))}
       </div>
     </div>
   );

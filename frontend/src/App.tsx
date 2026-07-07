@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "./api/client";
 import type { GraphData, Project, TaskRef, User } from "./types";
+import type { Theme } from "./theme";
+import { THEMES, useTheme } from "./theme";
 import ProjectSidebar from "./components/ProjectSidebar";
 import GraphView from "./components/GraphView";
 import CalendarView from "./components/CalendarView";
@@ -8,7 +10,14 @@ import TaskModal from "./components/TaskModal";
 
 type View = "graph" | "calendar";
 
+const THEME_LABELS: Record<Theme, string> = {
+  light: "Light",
+  dark: "Dark",
+  system: "System",
+};
+
 export default function App() {
+  const { theme, setTheme, dark } = useTheme();
   const [projects, setProjects] = useState<Project[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [projectId, setProjectId] = useState<string | null>(null);
@@ -51,7 +60,7 @@ export default function App() {
   );
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       <ProjectSidebar
         projects={projects}
         selectedId={projectId}
@@ -60,7 +69,7 @@ export default function App() {
       />
 
       <main className="flex flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2">
+        <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2 dark:border-gray-700 dark:bg-gray-800">
           <div className="flex gap-1">
             {(["graph", "calendar"] as View[]).map((v) => (
               <button
@@ -69,7 +78,7 @@ export default function App() {
                 className={`rounded px-3 py-1.5 text-sm capitalize ${
                   view === v
                     ? "bg-blue-600 text-white"
-                    : "text-gray-600 hover:bg-gray-100"
+                    : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
                 }`}
               >
                 {v}
@@ -77,22 +86,37 @@ export default function App() {
             ))}
           </div>
 
-          <button
-            onClick={() => setModal({ open: true, taskId: null })}
-            disabled={!projectId}
-            className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-          >
-            + New task
-          </button>
+          <div className="flex items-center gap-2">
+            <select
+              value={theme}
+              onChange={(e) => setTheme(e.target.value as Theme)}
+              aria-label="Theme"
+              className="rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+            >
+              {THEMES.map((t) => (
+                <option key={t} value={t}>
+                  {THEME_LABELS[t]}
+                </option>
+              ))}
+            </select>
+
+            <button
+              onClick={() => setModal({ open: true, taskId: null })}
+              disabled={!projectId}
+              className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            >
+              + New task
+            </button>
+          </div>
         </header>
 
         <div className="flex-1 overflow-hidden">
           {!projectId ? (
-            <div className="flex h-full items-center justify-center text-gray-400">
+            <div className="flex h-full items-center justify-center text-gray-400 dark:text-gray-500">
               Create a project to get started
             </div>
           ) : view === "graph" ? (
-            graph && <GraphView data={graph} onSelectTask={openTask} />
+            graph && <GraphView data={graph} dark={dark} onSelectTask={openTask} />
           ) : (
             <CalendarView projectId={projectId} onSelectTask={openTask} />
           )}
