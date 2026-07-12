@@ -16,14 +16,26 @@ export default function ProjectSidebar({
 }) {
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const create = async () => {
-    if (!name.trim()) return;
-    const project = await api.createProject({ name: name.trim() });
-    setName("");
-    setCreating(false);
-    onChanged();
-    onSelect(project.id);
+    if (!name.trim() || saving) return;
+
+    setSaving(true);
+    setError("");
+
+    try {
+      const project = await api.createProject({ name: name.trim() });
+      setName("");
+      setCreating(false);
+      onChanged();
+      onSelect(project.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create project");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -50,10 +62,14 @@ export default function ProjectSidebar({
           />
           <button
             onClick={() => void create()}
-            className="w-full rounded bg-blue-600 py-1.5 text-sm text-white hover:bg-blue-700"
+            disabled={saving || !name.trim()}
+            className="w-full rounded bg-blue-600 py-1.5 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
           >
-            Create project
+            {saving ? "Creating…" : "Create project"}
           </button>
+          {error && (
+            <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
+          )}
         </div>
       )}
 
